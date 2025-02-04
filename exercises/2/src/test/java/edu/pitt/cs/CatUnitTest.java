@@ -51,7 +51,7 @@ public class CatUnitTest {
 	@Test
 	public void testGetId() {
 		assertTrue(c.getId() == 1);
-		System.out.println(c.getId());
+		//System.out.println(c.getId());
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class CatUnitTest {
 	@Test
 	public void testGetName() {
 		assertTrue(c.getName().equals("Jennyanydots"));
-		System.out.println(c.getName());
+		//System.out.println(c.getName());
 
 	}
 
@@ -82,7 +82,7 @@ public class CatUnitTest {
 	@Test
 	public void testGetRented() {
 		assertTrue(!c.getRented());
-		System.out.println(c.getRented());
+		//System.out.println(c.getRented());
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class CatUnitTest {
 	@Test
 	public void testToString() {
 		assertTrue(c.toString().equals("ID 1. Jennyanydots"));
-		c.toString();
+		//c.toString();
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class CatUnitTest {
 	public void testRentCat() {
 		c.rentCat();
 		assertTrue(c.getRented());
-		System.out.println(c.getRented());
+		//System.out.println(c.getRented());
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class CatUnitTest {
 	public void testReturnCat() {
 		c.returnCat();
 		assertTrue(!c.getRented());
-		System.out.println(c.getRented());
+		//System.out.println(c.getRented());
 	}
 
 	/**
