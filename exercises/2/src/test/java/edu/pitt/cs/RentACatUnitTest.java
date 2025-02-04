@@ -1,17 +1,18 @@
 package edu.pitt.cs;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
-import static org.junit.Assert.*;
-
-import org.mockito.Mockito;
-import static org.mockito.Mockito.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.junit.After;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
+
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RentACatUnitTest {
@@ -42,18 +43,22 @@ public class RentACatUnitTest {
 		// Passing InstanceType.MOCK as the first parameter will create a mock RentACat object using Mockito.
 		// Which type is the correct choice for this unit test?  I'll leave it up to you.  The answer is in the Unit Testing Part 2 lecture. :)
 		// TODO: Fill in
+		r = RentACat.createInstance(InstanceType.MOCK);
 
 		// 2. Create a Cat with ID 1 and name "Jennyanydots", assign to c1 using a call to Cat.createInstance(InstanceType, int, String).
 		// Passing InstanceType.IMPL as the first parameter will create a real cat using your CatImpl implementation.
 		// Passing InstanceType.MOCK as the first parameter will create a mock cat using Mockito.
 		// Which type is the correct choice for this unit test?  Again, I'll leave it up to you.
 		// TODO: Fill in
+		c1 = Cat.createInstance(InstanceType.IMPL, 1, "Jennyanydots");
 
 		// 3. Create a Cat with ID 2 and name "Old Deuteronomy", assign to c2 using a call to Cat.createInstance(InstanceType, int, String).
 		// TODO: Fill in
+		c2 = Cat.createInstance(InstanceType.IMPL, 2, "Old Deuteronomy");
 
 		// 4. Create a Cat with ID 3 and name "Mistoffelees", assign to c3 using a call to Cat.createInstance(InstanceType, int, String).
 		// TODO: Fill in
+		c3 = Cat.createInstance(InstanceType.IMPL, 3, "Mistoffelees");
 
 		// 5. Redirect system output from stdout to the "out" stream
 		// First, make a back up of System.out (which is the stdout to the console)
@@ -91,8 +96,12 @@ public class RentACatUnitTest {
 	 * the class object of r instead of hardcoding it as RentACatImpl.
 	 */
 	@Test
-	public void testGetCatNullNumCats0() {
+	public void testGetCatNullNumCats0() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		// TODO: Fill in
+		Method m = RentACat.class.getDeclaredMethod("getCat", int.class);
+		m.setAccessible(true);
+		Object ret = m.invoke(r, 2);
+		assertTrue("Invalid cat ID\n", ret == null);
 	}
 
 	/**
@@ -111,8 +120,15 @@ public class RentACatUnitTest {
 	 * the class object of r instead of hardcoding it as RentACatImpl.
 	 */
 	@Test
-	public void testGetCatNumCats3() {
+	public void testGetCatNumCats3() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		// TODO: Fill in
+		r.addCat(c1);
+		r.addCat(c2);
+		r.addCat(c3);
+		Method m = RentACat.class.getDeclaredMethod("getCat", int.class);
+		m.setAccessible(true);
+		Object ret = m.invoke(r, 2);
+		assertTrue(ret.equals(c2));
 	}
 
 	/**
@@ -127,6 +143,7 @@ public class RentACatUnitTest {
 	@Test
 	public void testListCatsNumCats0() {
 		// TODO: Fill in
+		assertTrue(r.listCats().equals(""));
 	}
 
 	/**
@@ -142,6 +159,12 @@ public class RentACatUnitTest {
 	@Test
 	public void testListCatsNumCats3() {
 		// TODO: Fill in
+		r.addCat(c1);
+		r.addCat(c2);
+		r.addCat(c3);
+		assertTrue(r.listCats().equals("ID 1. Jennyanydots\n " +
+						"ID 2. Old Deuteronomy\n " +
+						"ID 3. Mistoffelees\n"));
 	}
 
 	/**
@@ -162,6 +185,8 @@ public class RentACatUnitTest {
 	@Test
 	public void testRenameFailureNumCats0() {
 		// TODO: Fill in
+		assertTrue("Invalid cat ID", !r.renameCat(2, "Garfield"));
+
 	}
 
 	/**
@@ -180,7 +205,10 @@ public class RentACatUnitTest {
 	 */
 	@Test
 	public void testRenameNumCat3() {
-		// TODO: Fill in
+		r.addCat(c1);
+		r.addCat(c2);
+		r.addCat(c3);
+		assertTrue(c2.getName().equals("Garfield"));
 	}
 
 	/**
@@ -200,7 +228,10 @@ public class RentACatUnitTest {
 	 */
 	@Test
 	public void testRentCatNumCats3() {
-		// TODO: Fill in
+		r.addCat(c1);
+		r.addCat(c2);
+		r.addCat(c3);
+		assertTrue("Old Deuteronomy has been rented.\n", r.rentCat(2));
 	}
 
 	/**
@@ -221,7 +252,10 @@ public class RentACatUnitTest {
 	 */
 	@Test
 	public void testRentCatFailureNumCats3() {
-		// TODO: Fill in
+		r.addCat(c1);
+		r.addCat(c2);
+		r.addCat(c3);
+		assertTrue("Sorry, Old Deuteronomy is not here!\n", !r.rentCat(2));
 	}
 
 	/**
@@ -242,7 +276,11 @@ public class RentACatUnitTest {
 	 */
 	@Test
 	public void testReturnCatNumCats3() {
-		// TODO: Fill in
+		r.addCat(c1);
+		r.addCat(c2);
+		r.addCat(c3);
+		r.rentCat(2);
+		assertTrue("Welcome back, Old Deuteronomy!\n", r.returnCat(2));
 	}
 
 	/**
@@ -262,7 +300,10 @@ public class RentACatUnitTest {
 	 */
 	@Test
 	public void testReturnFailureCatNumCats3() {
-		// TODO: Fill in
+		r.addCat(c1);
+		r.addCat(c2);
+		r.addCat(c3);
+		assertTrue("Old Deuteronomy is already here!\n", !r.returnCat(2));
 	}
 
 }
